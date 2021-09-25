@@ -22,13 +22,13 @@ trash_can_inner_parts1 = translate((0,0,thickness))(trash_can_inner_parts1)
 trash_can_parts = (trash_can_outer_parts1 - trash_can_inner_parts1)
 
 # make lid parts
-lid_inner_bottom_radius = (trash_can_outer_bottom_radius * top_scale)
+margine = 0.4
+lid_inner_bottom_radius = ((trash_can_outer_bottom_radius * top_scale) + margine)
 lid_outer_bottom_radius = (lid_inner_bottom_radius + thickness)
 lid_top_scale = 0.33
 lid_parts1_height = 8
 lid_parts2_height = 15
 lid_parts3_height = 5
-mergine = 0.1
 
 lid_outer_parts1 = make_taper(lid_outer_bottom_radius, lid_parts1_height, 1)
 lid_outer_parts2 = make_taper(lid_outer_bottom_radius, lid_parts2_height, lid_top_scale)
@@ -43,7 +43,7 @@ lid_inner_parts2 = translate((0,0,lid_parts1_height))(lid_inner_parts2)
 lid_inner_parts3 = make_taper((lid_inner_bottom_radius*lid_top_scale), lid_parts3_height, 1)
 lid_inner_parts3 = translate((0,0,(lid_parts1_height + lid_parts2_height)))(lid_inner_parts3)
 lid_inner_parts = lid_inner_parts1 + lid_inner_parts2 + lid_inner_parts3
-lid_inner_parts = translate((0,0,-mergine))(lid_inner_parts)
+lid_inner_parts = translate((0,0,-margine))(lid_inner_parts)
 
 lid_parts = lid_outer_parts - lid_inner_parts
 
