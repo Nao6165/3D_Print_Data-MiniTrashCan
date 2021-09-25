@@ -39,10 +39,11 @@ lid_outer_parts3 = translate((0,0,(lid_parts1_height + lid_parts2_height)))(lid_
 lid_outer_parts = lid_outer_parts1 + lid_outer_parts2 + lid_outer_parts3
 
 decoration_sphere_diameter= 6
-list_position = [[lid_outer_bottom_radius * math.cos(60),lid_outer_bottom_radius * math.sin(60),lid_parts1_height / 2]]
-sphere1 = sphere(d=decoration_sphere_diameter)
-sphere1 = translate(list_position[0])(sphere1)
-lid_outer_parts = lid_outer_parts + sphere1
+for deg in range(0,360,30):
+    decoration_sphere = sphere(d=decoration_sphere_diameter)
+    radius = math.radians(deg)
+    decoration_sphere = translate((lid_outer_bottom_radius * math.cos(radius),lid_outer_bottom_radius * math.sin(radius),lid_parts1_height / 2))(decoration_sphere)
+    lid_outer_parts = lid_outer_parts + decoration_sphere
 
 lid_inner_parts1 = make_taper(lid_inner_bottom_radius, (lid_parts1_height), 1)
 lid_inner_parts2 = make_taper(lid_inner_bottom_radius, lid_parts2_height, lid_top_scale)
