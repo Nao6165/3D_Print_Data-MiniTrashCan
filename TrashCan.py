@@ -1,5 +1,6 @@
 from solid import *
 from solid.utils import *
+import math
 
 def make_taper(r_work,h_work,s_work):
     shape=circle(r=r_work)
@@ -36,6 +37,13 @@ lid_outer_parts2 = translate((0,0,lid_parts1_height))(lid_outer_parts2)
 lid_outer_parts3 = make_taper((lid_outer_bottom_radius*lid_top_scale), lid_parts3_height, 1)
 lid_outer_parts3 = translate((0,0,(lid_parts1_height + lid_parts2_height)))(lid_outer_parts3)
 lid_outer_parts = lid_outer_parts1 + lid_outer_parts2 + lid_outer_parts3
+
+decoration_sphere_diameter= 6
+for deg in range(0,360,30):
+    decoration_sphere = sphere(d=decoration_sphere_diameter)
+    radius = math.radians(deg)
+    decoration_sphere = translate((lid_outer_bottom_radius * math.cos(radius),lid_outer_bottom_radius * math.sin(radius),lid_parts1_height / 2))(decoration_sphere)
+    lid_outer_parts = lid_outer_parts + decoration_sphere
 
 lid_inner_parts1 = make_taper(lid_inner_bottom_radius, (lid_parts1_height), 1)
 lid_inner_parts2 = make_taper(lid_inner_bottom_radius, lid_parts2_height, lid_top_scale)
