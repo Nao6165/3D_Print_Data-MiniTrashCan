@@ -1,51 +1,54 @@
 from solid import *
 from solid.utils import *
-shape1=circle(r = 45)
-shape2=circle(r = 43)
 
-taper1 = linear_extrude(height=100,center=True,scale=1.22)(shape1)
-taper2 = linear_extrude(height=100,center=True,scale=1.22)(shape2)
+def make_taper(r_work,h_work,s_work):
+    shape=circle(r=r_work)
+    taper=linear_extrude(height=h_work,center=True,scale=s_work)(shape)
+    taper = translate((0,0,(h_work / 2)))(taper)
+    return (taper)
 
-taper1 = up(50)(taper1)
-taper2 = up(53)(taper2)
+# make bottom parts
+thickness = 2
+trash_can_outer_bottom_radius = 45
+trash_can_inner_bottom_radius = trash_can_outer_bottom_radius - thickness
+height = 100
+top_scale = 1.22
 
-differences1 = (taper1 - taper2)
+trash_can_outer_parts1 = make_taper(trash_can_outer_bottom_radius,height,top_scale)
 
-differences1 = right(120)(differences1)
+trash_can_inner_parts1 = make_taper(trash_can_inner_bottom_radius,height,top_scale)
+trash_can_inner_parts1 = translate((0,0,thickness))(trash_can_inner_parts1)
 
-shape3 = circle(r = ((45*1.22)+1.5))
+trash_can_parts = (trash_can_outer_parts1 - trash_can_inner_parts1)
 
-shaft3 = linear_extrude(height=8)(shape3)
+# make lid parts
+lid_inner_bottom_radius = (trash_can_outer_bottom_radius * top_scale)
+lid_outer_bottom_radius = (lid_inner_bottom_radius + thickness)
+lid_top_scale = 0.33
+lid_parts1_height = 8
+lid_parts2_height = 15
+lid_parts3_height = 5
+mergine = 0.1
 
-taper3 = linear_extrude(height=15, scale=0.33)(shape3)
+lid_outer_parts1 = make_taper(lid_outer_bottom_radius, lid_parts1_height, 1)
+lid_outer_parts2 = make_taper(lid_outer_bottom_radius, lid_parts2_height, lid_top_scale)
+lid_outer_parts2 = translate((0,0,lid_parts1_height))(lid_outer_parts2)
+lid_outer_parts3 = make_taper((lid_outer_bottom_radius*lid_top_scale), lid_parts3_height, 1)
+lid_outer_parts3 = translate((0,0,(lid_parts1_height + lid_parts2_height)))(lid_outer_parts3)
+lid_outer_parts = lid_outer_parts1 + lid_outer_parts2 + lid_outer_parts3
 
-taper3 = up(8)(taper3)
+lid_inner_parts1 = make_taper(lid_inner_bottom_radius, (lid_parts1_height), 1)
+lid_inner_parts2 = make_taper(lid_inner_bottom_radius, lid_parts2_height, lid_top_scale)
+lid_inner_parts2 = translate((0,0,lid_parts1_height))(lid_inner_parts2)
+lid_inner_parts3 = make_taper((lid_inner_bottom_radius*lid_top_scale), lid_parts3_height, 1)
+lid_inner_parts3 = translate((0,0,(lid_parts1_height + lid_parts2_height)))(lid_inner_parts3)
+lid_inner_parts = lid_inner_parts1 + lid_inner_parts2 + lid_inner_parts3
+lid_inner_parts = translate((0,0,-mergine))(lid_inner_parts)
 
-shape4 = circle(r=18)
+lid_parts = lid_outer_parts - lid_inner_parts
 
-shaft4 = linear_extrude(height=5)(shape4)
+trash_can_parts = right(60)(trash_can_parts)
+lid_parts = left(60)(lid_parts)
 
-shaft4 = up(23)(shaft4)
-
-futa_outer = shaft3 + taper3 + shaft4
-
-shape5 = circle(r = (45*1.22))
-
-shaft5 = linear_extrude(height=9)(shape5)
-
-shaft5 = down(1)(shaft5)
-
-taper5 = linear_extrude(height=15, scale=0.33)(shape5)
-
-taper5 = up(8)(taper5)
-
-shape6 = circle(r=(18-1.5))
-
-shaft6 = linear_extrude(height=(5 - 1.5))(shape6)
-
-shaft6 = up(23)(shaft6)
-
-futa_inner = shaft5 + taper5 + shaft6
-
-print(scad_render(differences1))
-print(scad_render(futa_outer - futa_inner))
+print(scad_render(trash_can_parts))
+print(scad_render(lid_parts))    
